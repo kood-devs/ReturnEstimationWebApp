@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-8">Return Estimation with DNN</h1>
+        <p class="lead">DNNを用いた株式リターンの予測モデルを検証します。</p>
+    </div>
+</div>
+{% endblock header %}
+
+{% block content %}
+<div class='container'>
+    <p>モデル一覧</p>
+    {% for item in object_list %}
+    <div class="alert alert-primary" role="alert">
+        <p>model name: {{ item.title }}</p>
+        <a href="{% url 'delete_params' item.pk %}" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true">削除</a>
+    </div>
+    {% endfor %}
+
+    <a href="{% url 'set_params' %}" class="btn btn-info" tabindex="-1" role="button" aria-disabled="true">新規モデル登録</a>
+</div>
+{% endblock content %}

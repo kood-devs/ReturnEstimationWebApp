@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-8">モデル設定</h1>
+        <p class="lead">学習させるモデルの条件を設定してください。</p>
+    </div>
+</div>
+{% endblock header %}
+
+{% block content %}
+<form action='' method ='POST'>{% csrf_token %}
+    <p>パラメタ入力欄</p>
+    <table>
+        {{form}}
+    </table>
+    <input type='submit' value='create new model'>
+</form>
+{% endblock content %}

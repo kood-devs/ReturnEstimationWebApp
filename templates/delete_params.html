@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-8">Return Estimation by DNN</h1>
+        <p class="lead">モデルを削除する確認フォーム。</p>
+    </div>
+</div>
+{% endblock header %}
+
+{% block content %}
+<p>本当に削除しますか？</p>
+<form action='' method="POST">{% csrf_token %}
+    <input type="submit" value='削除します'>
+</form>
+{% endblock content %}
