@@ -1,1 +1,1 @@
-# Return Estimation Web App
+# Return estimation web app made by Python (Django)
