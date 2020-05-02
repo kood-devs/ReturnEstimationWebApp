@@ -14,4 +14,6 @@
 <form action='' method="POST">{% csrf_token %}
     <input type="submit" value='削除します'>
 </form>
+<a href="{{request.META.HTTP_REFERER}}">前の画面に戻る</a>
+
 {% endblock content %}
