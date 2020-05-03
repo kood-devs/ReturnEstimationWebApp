@@ -13,8 +13,8 @@ class LearningModel(models.Model):
     batch_size = models.IntegerField()
 
     # dnn results
-    train_acc = models.FloatField()
-    test_acc = models.FloatField()
+    train_acc = models.FloatField(default=0.0)
+    test_acc = models.FloatField(default=0.0)
 
     def __str__(self):
         return self.title

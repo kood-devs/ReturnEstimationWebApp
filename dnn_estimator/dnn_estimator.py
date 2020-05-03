@@ -93,9 +93,7 @@ def learn_dnn(train_start, train_end, test_start, test_end, epoch, batch_size):
     x_test, y_test = get_log_return(
         test_start, test_start, EXCHANGES_DEFINE, SAME_EXCHANGES_DEFINE)
 
-    # 学習を実施・結果を出力
-    result = pd.DataFrame()  # 結果格納用オブジェクト
-
+    # 学習を実施
     model = models.Sequential()
     model.add(layers.Dense(32, activation='relu',
                            input_shape=(x_train.shape[1],)))
@@ -108,11 +106,11 @@ def learn_dnn(train_start, train_end, test_start, test_end, epoch, batch_size):
                         validation_data=(x_test, y_test))
     show_learning_process(history)
 
+    # 結果を出力
     acc = sum([1 if val >= 0.5 else 0 for val in model.predict(x_train)] == y_train)
     acc /= y_train.shape[0]
     val_acc = sum(
         [1 if val >= 0.5 else 0 for val in model.predict(x_test)] == y_test)
     val_acc /= y_test.shape[0]
-    result['DNN'] = np.array([acc, val_acc])
 
-    return result
+    return acc, val_acc

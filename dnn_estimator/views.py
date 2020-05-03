@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DeleteView
 from .models import LearningModel
+from .dnn_estimator import *
 
 
 class MainForm(ListView):
@@ -25,4 +26,10 @@ class DeleteParams(DeleteView):
 
 def learn_dnn_model(request, pk):
     params = LearningModel.objects.get(pk=pk)
-    
+    print(params)
+    result = learn_dnn(
+        params.train_start, params.train_end, params.test_start, params.test_end, params.epoch, params.batch_size)
+    params.train_acc, params.test_acc = result
+    params.save()
+    # return redirect('main')
+    return render(request, 'main.html')
