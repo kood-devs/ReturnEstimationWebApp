@@ -4,7 +4,6 @@ from django.views.generic import ListView, CreateView, DeleteView
 from .models import LearningModel
 from .dnn_estimator import *
 
-
 class MainForm(ListView):
     template_name = 'main.html'
     model = LearningModel
@@ -31,5 +30,5 @@ def learn_dnn_model(request, pk):
         params.train_start, params.train_end, params.test_start, params.test_end, params.epoch, params.batch_size)
     params.train_acc, params.test_acc = result
     params.save()
-    # return redirect('main')
-    return render(request, 'main.html')
+    return redirect('main')
+    # return render(request, 'main.html')

@@ -1,7 +1,3 @@
-"""
-    Google (2015)
-    URL: https://github.com/corrieelston/datalab/blob/master/FinancialTimeSeriesTensorFlow.ipynb
-"""
 from datetime import datetime
 
 import numpy as np
@@ -35,10 +31,8 @@ SAME_EXCHANGES_DEFINE = [  # 米欧のインデックスは前日終値～を使
 # 学習結果をプロット
 def show_learning_process(history):
     history_dict = history.history
-
     acc = history_dict['acc']
     val_acc = history_dict['val_acc']
-
     epochs = range(1, len(acc) + 1)
 
     plt.plot(epochs, acc, 'bo', label='Training acc')
@@ -91,7 +85,7 @@ def learn_dnn(train_start, train_end, test_start, test_end, epoch, batch_size):
     x_train, y_train = get_log_return(
         train_start, train_end, EXCHANGES_DEFINE, SAME_EXCHANGES_DEFINE)
     x_test, y_test = get_log_return(
-        test_start, test_start, EXCHANGES_DEFINE, SAME_EXCHANGES_DEFINE)
+        test_start, test_end, EXCHANGES_DEFINE, SAME_EXCHANGES_DEFINE)
 
     # 学習を実施
     model = models.Sequential()
@@ -104,7 +98,7 @@ def learn_dnn(train_start, train_end, test_start, test_end, epoch, batch_size):
     model.summary()
     history = model.fit(x_train, y_train, epochs=epoch, batch_size=batch_size,
                         validation_data=(x_test, y_test))
-    show_learning_process(history)
+    # show_learning_process(history)
 
     # 結果を出力
     acc = sum([1 if val >= 0.5 else 0 for val in model.predict(x_train)] == y_train)
