@@ -94,7 +94,7 @@ def learn_dnn(train_start, train_end, test_start, test_end, epoch, batch_size):
         test_start, test_start, EXCHANGES_DEFINE, SAME_EXCHANGES_DEFINE)
 
     # 学習を実施・結果を出力
-    result = pd.DataFrame()  # 結果の出力用
+    result = pd.DataFrame()  # 結果格納用オブジェクト
 
     model = models.Sequential()
     model.add(layers.Dense(32, activation='relu',
