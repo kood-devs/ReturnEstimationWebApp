@@ -21,3 +21,8 @@ class DeleteParams(DeleteView):
     template_name = 'delete_params.html'
     model = LearningModel
     success_url = reverse_lazy('main')
+
+
+def learn_dnn_model(request, pk):
+    params = LearningModel.objects.get(pk=pk)
+    

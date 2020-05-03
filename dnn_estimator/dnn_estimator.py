@@ -10,18 +10,7 @@ import pandas_datareader.data as pdr
 import matplotlib.pyplot as plt
 from keras import models, layers
 
-from sklearn.svm import SVC
-from sklearn.linear_model import LogisticRegression
-from sklearn.tree import DecisionTreeClassifier
-
 # CONST
-TRAINING_START = datetime(2000, 1, 1)
-TRAINING_END = datetime(2015, 12, 31)
-TEST_START = datetime(2016, 1, 1)
-TEST_END = datetime(2019, 10, 1)
-EPOCH = 50
-BATCH_SIZE = 128
-
 EXCHANGES_DEFINE = [
     ['SP500', '^GSPC'],
     ['NYSE', '^NYA'],
@@ -69,9 +58,6 @@ def get_log_return(start_date, end_date, index_list, same_index_list, number_of_
             name[1], 'yahoo', start_date, end_date)['Close']
     closing_data = closing_data.fillna(method='ffill')  # 休場日は前日終値を横置き
 
-    # 一応データを保存しておく
-    closing_data.to_csv('result/index.csv')
-
     # 対数リターンに変換
     log_return_data = pd.DataFrame()
     for name in index_list:
@@ -95,20 +81,21 @@ def get_log_return(start_date, end_date, index_list, same_index_list, number_of_
 
     # 型を整えてデータを返却
     train_test_data = train_test_data.dropna()
-    train_test_data.to_csv(
-        'result/learning_data_{}.csv'.format(number_of_shift))
     x_val = np.array(train_test_data.iloc[:, 1:])
     y_val = np.array(train_test_data.iloc[:, 0]).reshape(-1)
     return x_val, y_val
 
 
-def learn_test_models(x_train, y_train, x_test, y_test):
-    # 様々なモデルで訓練を実施、テストデータのパフォーマンスを計算
+def learn_dnn(train_start, train_end, test_start, test_end, epoch, batch_size):
+    # データを準備
+    x_train, y_train = get_log_return(
+        train_start, train_end, EXCHANGES_DEFINE, SAME_EXCHANGES_DEFINE)
+    x_test, y_test = get_log_return(
+        test_start, test_start, EXCHANGES_DEFINE, SAME_EXCHANGES_DEFINE)
+
+    # 学習を実施・結果を出力
     result = pd.DataFrame()  # 結果の出力用
 
-    # ------------------------------------------
-    #  DNN
-    # ------------------------------------------
     model = models.Sequential()
     model.add(layers.Dense(32, activation='relu',
                            input_shape=(x_train.shape[1],)))
@@ -117,7 +104,7 @@ def learn_test_models(x_train, y_train, x_test, y_test):
     model.compile(optimizer='rmsprop',
                   loss='binary_crossentropy', metrics=['accuracy'])
     model.summary()
-    history = model.fit(x_train, y_train, epochs=EPOCH, batch_size=BATCH_SIZE,
+    history = model.fit(x_train, y_train, epochs=epoch, batch_size=batch_size,
                         validation_data=(x_test, y_test))
     show_learning_process(history)
 
@@ -128,114 +115,4 @@ def learn_test_models(x_train, y_train, x_test, y_test):
     val_acc /= y_test.shape[0]
     result['DNN'] = np.array([acc, val_acc])
 
-    # ------------------------------------------
-    #  二項ロジット
-    # ------------------------------------------
-    model = LogisticRegression(penalty='none', max_iter=1e10, tol=1e-10)
-    model.fit(x_train, y_train)
-
-    acc = sum(model.predict(x_train) == y_train) / y_train.shape[0]
-    val_acc = sum(model.predict(x_test) == y_test) / y_test.shape[0]
-    result['BinomialLogit'] = np.array([acc, val_acc])
-
-    # ------------------------------------------
-    #  サポートベクトルマシン
-    # ------------------------------------------
-    # 線形SVC
-    model = SVC(kernel='linear', random_state=1, C=1.0)
-    model.fit(x_train, y_train)
-
-    acc = sum(model.predict(x_train) == y_train) / y_train.shape[0]
-    val_acc = sum(model.predict(x_test) == y_test) / y_test.shape[0]
-    result['LinearSVC'] = np.array([acc, val_acc])
-
-    # カーネルSVC
-    model = SVC(kernel='rbf', random_state=1, gamma=100.0, C=1.0)
-    model.fit(x_train, y_train)
-
-    acc = sum(model.predict(x_train) == y_train) / y_train.shape[0]
-    val_acc = sum(model.predict(x_test) == y_test) / y_test.shape[0]
-    result['KernelSVC'] = np.array([acc, val_acc])
-
-    # ------------------------------------------
-    #  決定木
-    # ------------------------------------------
-    model = DecisionTreeClassifier(
-        criterion='gini', max_depth=4, random_state=1)
-    model.fit(x_train, y_train)
-
-    acc = sum(model.predict(x_train) == y_train) / y_train.shape[0]
-    val_acc = sum(model.predict(x_test) == y_test) / y_test.shape[0]
-    result['DecisionTree'] = np.array([acc, val_acc])
-
-    # 結果の出力
-    result = result.rename(index={0: 'acc', 1: 'val_acc'})
-    print(result)
-    result.to_csv('result/result_several.csv')
-
-
-def learn_test_rnn(x_train, y_train, x_test, y_test):
-    # RNNで訓練を実施、結果を出力
-    result = pd.DataFrame()
-
-    # モデルを構築
-    model = models.Sequential()
-    model.add(layers.LSTM(32, batch_input_shape=(
-        None, x_train.shape[1], x_train.shape[2]), activation='relu'))
-    model.add(layers.Dense(32, activation='relu'))
-    model.add(layers.Dense(1, activation='sigmoid'))
-    model.compile(optimizer='rmsprop',
-                  loss='binary_crossentropy', metrics=['accuracy'])
-    model.summary()
-    history = model.fit(x_train, y_train, epochs=EPOCH, batch_size=BATCH_SIZE,
-                        validation_data=(x_test, y_test))
-    show_learning_process(history)
-
-    # 結果を算出
-    acc = sum([1 if val >= 0.5 else 0 for val in model.predict(x_train)] == y_train)
-    acc /= y_train.shape[0]
-    val_acc = sum(
-        [1 if val >= 0.5 else 0 for val in model.predict(x_test)] == y_test)
-    val_acc /= y_test.shape[0]
-
-    result['RNN'] = np.array([acc, val_acc])
-    result.to_csv('result/result_rnn.csv')
-
-
-def main():
-    # データを準備
-    x_train, y_train = get_log_return(
-        TRAINING_START, TRAINING_END, EXCHANGES_DEFINE, SAME_EXCHANGES_DEFINE)
-    x_test, y_test = get_log_return(
-        TEST_START, TEST_END, EXCHANGES_DEFINE, SAME_EXCHANGES_DEFINE)
-
-    # 学習を実施・結果を出力
-    learn_test_models(x_train, y_train, x_test, y_test)
-
-    # RNNによる学習
-    x_train, y_train = get_log_return(
-        TRAINING_START, TRAINING_END, EXCHANGES_DEFINE, SAME_EXCHANGES_DEFINE, number_of_shift=1)
-    x_test, y_test = get_log_return(
-        TEST_START, TEST_END, EXCHANGES_DEFINE, SAME_EXCHANGES_DEFINE, number_of_shift=1)
-
-    # RNN学習用にreshape
-    length_of_sequences = 10
-    x_val = []
-    for i in range(x_train.shape[0] - length_of_sequences + 1):
-        x_val.append(x_train[i:i+length_of_sequences])
-    x_train = np.array(x_val)
-
-    x_val = []
-    for i in range(x_test.shape[0] - length_of_sequences + 1):
-        x_val.append(x_test[i:i+length_of_sequences])
-    x_test = np.array(x_val)
-
-    y_train = y_train[length_of_sequences-1:]
-    y_test = y_test[length_of_sequences-1:]
-
-    # 学習を実施・結果を出力
-    learn_test_rnn(x_train, y_train, x_test, y_test)
-
-
-if __name__ == '__main__':
-    main()
+    return result
