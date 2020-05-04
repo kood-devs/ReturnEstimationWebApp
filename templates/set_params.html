@@ -1,21 +1,23 @@
 {% extends 'base.html' %}
 
 {% block header %}
-<div class="jumbotron jumbotron-fluid">
-    <div class="container">
-        <h1 class="display-8">モデル設定</h1>
-        <p class="lead">学習させるモデルの条件を設定してください。</p>
-    </div>
+<div class="container">
+    <h1>Return Estimation with DNN</h1>
+    <p class="lead">学習させるモデルの条件を設定してください。</p>
 </div>
 {% endblock header %}
 
 {% block content %}
-<form action='' method ='POST'>{% csrf_token %}
-    <p>パラメタ入力欄</p>
-    <table>
-        {{form}}
-    </table>
-    <input type='submit' value='新規モデル追加'>
-</form>
-<a href="{{request.META.HTTP_REFERER}}">前の画面に戻る</a>
+<div class='container'>
+    <div class="alert alert-primary" role="alert">
+        <form action='' method ='POST'>{% csrf_token %}
+            <p>パラメタ入力欄</p>
+            <table>
+                {{form}}
+            </table>
+            <input type='submit' value='新規モデル追加'>
+        </form>
+    </div>
+    <a href="{{request.META.HTTP_REFERER}}">前の画面に戻る</a>
+</div>
 {% endblock content %}

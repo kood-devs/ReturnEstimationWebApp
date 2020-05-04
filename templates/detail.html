@@ -1,34 +1,32 @@
 {% extends 'base.html' %}
 
 {% block header %}
-<div class="jumbotron jumbotron-fluid">
     <div class="container">
-        <h1 class="display-8">モデル詳細</h1>
+        <h1>Return Estimation with DNN</h1>
         <p class="lead">選択されたモデルの詳細は以下の通りです。</p>
     </div>
-</div>
 {% endblock header %}
 
 {% block content %}
-<p>ユーザタイトル： {{ object.title }}</p>
 <div class='container'>
-    <div class="alert alert-success" role="alert">
-        <p>訓練データ開始日： {{ object.train_start }}</p>
-        <p>訓練データ終了日： {{ object.train_end }}</p>
-        <p>テストデータ開始日： {{ object.test_start }}</p>
-        <p>テストデータ終了日： {{ object.test_end }}</p>
-        <p>エポック数： {{ object.epoch }}</p>
-        <p>バッチサイズ： {{ object.batch_size }}</p>
+    <p class="lead">パラメタ一覧（モデル名：{{ object.title }}）</p>
+    <div class="alert alert-primary" role="alert">
+        <p>訓練データ開始日　{{ object.train_start }}</p>
+        <p>訓練データ終了日　{{ object.train_end }}</p>
+        <p>テストデータ開始日　{{ object.test_start }}</p>
+        <p>テストデータ終了日　{{ object.test_end }}</p>
+        <p>エポック数　{{ object.epoch }}</p>
+        <p>バッチサイズ　{{ object.batch_size }}</p>
     </div>
 </div> 
 
-<p>学習結果（未学習の場合は0.0を表示）</p>
 <div class='container'>
+    <p class="lead">学習結果（未学習の場合は0.0を表示）</p>
     <div class="alert alert-primary" role="alert">
-        <p>訓練データ正解率： {{ object.train_acc }}</p>
-        <p>テストデータ正解率： {{ object.test_acc }}</p>
-    </div>    
-</div>
+        <p>訓練データ正解率　{{ object.train_acc }}</p>
+        <p>テストデータ正解率　{{ object.test_acc }}</p>
+    </div> 
 <a href="{{request.META.HTTP_REFERER}}">前の画面に戻る</a>
+</div>
 
 {% endblock content %}

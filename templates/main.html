@@ -1,17 +1,20 @@
 {% extends 'base.html' %}
 
 {% block header %}
-<div class="jumbotron jumbotron-fluid">
+<div>
     <div class="container">
-        <h1 class="display-8">Return Estimation with DNN</h1>
-        <p class="lead">DNNを用いた株式リターンの予測モデルを検証します。</p>
+        <h1>Return Estimation with DNN</h1>
+        <p>S&P500のリターン騰落を，他の株式リターンインデックス
+        （NYSE Composit，ダウ平均株価，ナスダック総合指数，ドイツ株価指数，日経平均株価，
+        香港ハンセン株価指数，All Ordinaries）を用いて予測するモデルを検証します。
+        本検証では，単純なDeep Neural Networkを使用します。</p>
     </div>
 </div>
 {% endblock header %}
 
 {% block content %}
 <div class='container'>
-    <p>モデル一覧</p>
+    <p class="lead">モデル一覧</p>
     {% for item in object_list %}
     <div class="alert alert-primary" role="alert">
         <p>ユーザタイトル: {{ item.title }}</p>
