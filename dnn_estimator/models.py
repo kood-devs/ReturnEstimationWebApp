@@ -5,7 +5,7 @@ from django.utils import timezone
 class LearningModel(models.Model):
     # identifier for past model
     title = models.CharField(max_length=100)
-    model_dev_date = models.DateField(default=timezone.now)
+    model_dev_date = models.DateField(default=timezone.now())
 
     # dnn input params
     train_start = models.DateField()
