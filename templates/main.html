@@ -1,15 +1,14 @@
 {% extends 'base.html' %}
 
 {% block header %}
-<div>
-    <div class="container">
-        <h1>Return Estimation with DNN</h1>
-        <p>S&P500のリターン騰落を，他の株式リターンインデックス
-        （NYSE Composit，ダウ平均株価，ナスダック総合指数，ドイツ株価指数，日経平均株価，
-        香港ハンセン株価指数，All Ordinaries）を用いて予測するモデルを検証します。
-        本検証では，単純なDeep Neural Networkを使用します。</p>
-    </div>
+<div class="container">
+    <h1>Return Estimation with DNN</h1>
+    <p>S&P500のリターン騰落を，他の株式リターンインデックス
+    （NYSE Composit，ダウ平均株価，ナスダック総合指数，ドイツ株価指数，日経平均株価，
+    香港ハンセン株価指数，All Ordinaries）を用いて予測するモデルを検証します。
+    本検証では，単純なDeep Neural Networkを使用します。</p>
 </div>
+<br>
 {% endblock header %}
 
 {% block content %}
@@ -23,6 +22,7 @@
         <a href="{% url 'delete_params' item.pk %}" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true">削除</a>
     </div>
     {% endfor %}
+
 
     <a href="{% url 'set_params' %}" class="btn btn-info" tabindex="-1" role="button" aria-disabled="true">新規モデル登録</a>
 </div>
