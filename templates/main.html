@@ -17,7 +17,7 @@
     <p class="lead">モデル一覧</p>
     {% for item in object_list %}
     <div class="alert alert-primary" role="alert">
-        <p>ユーザタイトル: {{ item.title }}</p>
+        <p>ユーザタイトル: {{ item.title }}     モデル作成日： {{ item.odel_dev_date}}</p>
         <a href="{% url 'detail' item.pk %}" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true">詳細</a>
         <a href="{% url 'learn_dnn_model' item.pk %}" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true">学習</a>
         <a href="{% url 'delete_params' item.pk %}" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true">削除</a>
