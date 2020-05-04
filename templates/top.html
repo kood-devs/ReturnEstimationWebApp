@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<div class="container">
+    <h1>Return Estimation with DNN</h1>
+</div>
+<br>
+{% endblock header %}
+
+{% block content %}
+<div class='container'>
+    <br>
+        <h4>１．概要</h4>
+        <p>このアプリはS&P500のリターン騰落を，他の株式インデックス
+        （NYSE Composit，ダウ平均株価，ナスダック総合指数，ドイツ株価指数，日経平均株価，
+        香港ハンセン株価指数，All Ordinaries）を用いて予測するモデルの検証を実施するものです。</p>
+    <br>
+        <h4>２．予測モデルについて</h4>
+        <p>このアプリでは，予測モデルとしてDeep Neural Networkを使用します。
+        Deep Neural Networkは，機械学習分野の中で近年最も注目されているモデルの一つです。
+        <br>アプリでは，全結合層からなる最も単純なDeep Neural Networkを使用して，ユーザが設定した期間
+        で学習と検証を試すことが出来ます。</p>
+    <br>
+
+    <div class="alert alert-primary" role="alert">
+        <a href="{% url 'main' %}" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true">メインページに移動</a>
+    </div>
+</div>
+{% endblock content %}

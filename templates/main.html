@@ -19,11 +19,11 @@
         <p>ユーザタイトル：　{{ item.title }}　　　モデル作成日：　{{ item.model_dev_date}}</p>
         <a href="{% url 'detail' item.pk %}" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true">詳細</a>
         <a href="{% url 'learn_dnn_model' item.pk %}" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true">学習</a>
-        <a href="{% url 'delete_params' item.pk %}" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true">削除</a>
+        <a href="{% url 'delete_param' item.pk %}" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true">削除</a>
     </div>
     {% endfor %}
 
 
-    <a href="{% url 'set_params' %}" class="btn btn-info" tabindex="-1" role="button" aria-disabled="true">新規モデル登録</a>
+    <a href="{% url 'set_param' %}" class="btn btn-info" tabindex="-1" role="button" aria-disabled="true">新規モデル登録</a>
 </div>
 {% endblock content %}

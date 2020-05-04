@@ -1,8 +1,13 @@
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, DeleteView
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, DeleteView
 from .models import LearningModel
 from .dnn_estimator import *
+
+
+class TopForm(TemplateView):
+    template_name = 'top.html'
+    model = LearningModel
 
 
 class MainForm(ListView):
@@ -15,16 +20,16 @@ class DetailForm(DetailView):
     model = LearningModel
 
 
-class SetParams(CreateView):
-    template_name = 'set_params.html'
+class SetParam(CreateView):
+    template_name = 'set_param.html'
     model = LearningModel
     fields = ('title', 'train_start', 'train_end',
               'test_start', 'test_end', 'epoch', 'batch_size')
     success_url = reverse_lazy('main')
 
 
-class DeleteParams(DeleteView):
-    template_name = 'delete_params.html'
+class DeleteParam(DeleteView):
+    template_name = 'delete_param.html'
     model = LearningModel
     success_url = reverse_lazy('main')
 
@@ -32,7 +37,6 @@ class DeleteParams(DeleteView):
 def learn_dnn_model(request, pk):
     # learn individual model
     params = LearningModel.objects.get(pk=pk)
-    print(params)
     result = learn_dnn(
         params.train_start, params.train_end, params.test_start, params.test_end, params.epoch, params.batch_size)
     params.train_acc, params.test_acc = result
