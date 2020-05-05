@@ -1,6 +1,9 @@
+import os
+
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, DeleteView
+
 from .models import LearningModel
 from .dnn_estimator import *
 
@@ -38,8 +41,11 @@ def learn_dnn_model(request, pk):
     # learn individual model
     params = LearningModel.objects.get(pk=pk)
     result = learn_dnn(
-        params.train_start, params.train_end, params.test_start, params.test_end, params.epoch, params.batch_size)
+        params.train_start, params.train_end, params.test_start, params.test_end, params.epoch, params.batch_size, params.title)
     params.train_acc, params.test_acc = result
+    params.images = '{}.jpg'.format(params.title)
+    # os.remove('media/{}.jpg'.format(params.title))
     params.save()
+
     return redirect('main')
-    # return render(request, 'main.html')
+    # return render(request, 'detail.html')  # 本当は学習完了後に結果が入力されたdetail画面に移動したい... -> 何故か結果が空に

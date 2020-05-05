@@ -18,6 +18,7 @@ class LearningModel(models.Model):
     # dnn results
     train_acc = models.FloatField('訓練データ正答率', default=0.0)
     test_acc = models.FloatField('テストデータ正答率', default=0.0)
+    images = models.ImageField('学習過程', upload_to='', default='null.jpg')
 
     def __str__(self):
         return self.title

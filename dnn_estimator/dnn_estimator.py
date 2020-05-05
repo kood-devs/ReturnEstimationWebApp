@@ -28,11 +28,13 @@ SAME_EXCHANGES_DEFINE = [  # 米欧のインデックスは前日終値～を使
 ]
 
 
-# 学習結果をプロット
-def show_learning_process(history):
+# 学習過程の画像を保存
+def save_learning_process_img(history, img_name):
     history_dict = history.history
-    acc = history_dict['acc']
-    val_acc = history_dict['val_acc']
+    print(history_dict)
+    # print(dir(history_dict))
+    acc = history_dict['accuracy']
+    val_acc = history_dict['val_accuracy']
     epochs = range(1, len(acc) + 1)
 
     plt.plot(epochs, acc, 'bo', label='Training acc')
@@ -40,8 +42,9 @@ def show_learning_process(history):
     plt.title('Training and validation acc')
     plt.xlabel('Epochs')
     plt.ylabel('Accuracy')
-    plt.legend()
-    plt.show()
+    plt.savefig('media/{}.jpg'.format(img_name))
+    # plt.legend()
+    # plt.show()
 
 
 def get_log_return(start_date, end_date, index_list, same_index_list, number_of_shift=3):
@@ -80,7 +83,7 @@ def get_log_return(start_date, end_date, index_list, same_index_list, number_of_
     return x_val, y_val
 
 
-def learn_dnn(train_start, train_end, test_start, test_end, epoch, batch_size):
+def learn_dnn(train_start, train_end, test_start, test_end, epoch, batch_size, img_name):
     # データを準備
     x_train, y_train = get_log_return(
         train_start, train_end, EXCHANGES_DEFINE, SAME_EXCHANGES_DEFINE)
@@ -98,7 +101,9 @@ def learn_dnn(train_start, train_end, test_start, test_end, epoch, batch_size):
     model.summary()
     history = model.fit(x_train, y_train, epochs=epoch, batch_size=batch_size,
                         validation_data=(x_test, y_test))
-    # show_learning_process(history)
+
+    # 学習過程の保存
+    save_learning_process_img(history, img_name)
 
     # 結果を出力
     acc = sum([1 if val >= 0.5 else 0 for val in model.predict(x_train)] == y_train)
@@ -106,5 +111,4 @@ def learn_dnn(train_start, train_end, test_start, test_end, epoch, batch_size):
     val_acc = sum(
         [1 if val >= 0.5 else 0 for val in model.predict(x_test)] == y_test)
     val_acc /= y_test.shape[0]
-
     return acc, val_acc

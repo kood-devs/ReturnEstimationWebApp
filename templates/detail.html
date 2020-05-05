@@ -25,7 +25,8 @@
     <div class="alert alert-primary" role="alert">
         <p>訓練データ正解率　{{ object.train_acc }}</p>
         <p>テストデータ正解率　{{ object.test_acc }}</p>
-    </div> 
+        <p>学習過程　<img src='{{object.images.url}}' width=700></p>
+    </div>
 <a href="{{request.META.HTTP_REFERER}}">前の画面に戻る</a>
 </div>
 
